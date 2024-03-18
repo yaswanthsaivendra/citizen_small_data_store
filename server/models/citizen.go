@@ -3,7 +3,7 @@ package models
 import (
 	"time"
 
-	"gorm.io/gorm"
+	"go.mongodb.org/mongo-driver/bson/primitive"
 )
 
 type Gender string
@@ -15,19 +15,24 @@ const (
 )
 
 type CitizenModel struct {
-	gorm.Model
-	FirstName   string    `gorm:"size:255; not null"`
-	LastName    string    `gorm:"size:255; not null"`
-	DateOfBirth time.Time `gorm:"not null"`
-	Gender      string    `gorm:"size:255; not null"`
-	Address     string    `gorm:"size:255; not null"`
-	City        string    `gorm:"size:255; not null"`
-	State       string    `gorm:"size:255; not null"`
-	Pincode     string    `gorm:"size:255; not null"`
+	ID          primitive.ObjectID `bson:"_id,omitempty" json:"id,omitempty"`
+	FirstName   string             `bson:"firstName" json:"firstName"`
+	LastName    string             `bson:"lastName" json:"lastName"`
+	DateOfBirth time.Time          `bson:"dateOfBirth" json:"dateOfBirth"`
+	Gender      string             `bson:"gender" json:"gender"`
+	Address     string             `bson:"address" json:"address"`
+	City        string             `bson:"city" json:"city"`
+	State       string             `bson:"state" json:"state"`
+	Pincode     string             `bson:"pincode" json:"pincode"`
 }
 
-// func (citizen *CitizenModel) CreateCitizen() error {
-// 	db := database.GetDB()
-// 	err := db.Create(&citizen).Error
-// 	return err
-// }
+type CitizenSerializer struct {
+	FirstName   string    `bson:"firstName" json:"firstName"`
+	LastName    string    `bson:"lastName" json:"lastName"`
+	DateOfBirth time.Time `bson:"dateOfBirth" json:"dateOfBirth"`
+	Gender      string    `bson:"gender" json:"gender"`
+	Address     string    `bson:"address" json:"address"`
+	City        string    `bson:"city" json:"city"`
+	State       string    `bson:"state" json:"state"`
+	Pincode     string    `bson:"pincode" json:"pincode"`
+}

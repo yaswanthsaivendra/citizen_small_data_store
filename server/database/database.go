@@ -2,27 +2,35 @@ package database
 
 import (
 	"context"
-	"fmt"
-	"os"
 
 	"go.mongodb.org/mongo-driver/mongo"
 	"go.mongodb.org/mongo-driver/mongo/options"
 )
 
-func InitDB() {
-	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
-	opts := options.Client().ApplyURI(os.Getenv("DATABASE_URL")).SetServerAPIOptions(serverAPI)
+var (
+	client   *mongo.Client
+	Citizens *mongo.Collection
+)
 
-	client, err := mongo.Connect(context.Background(), opts)
+func InitDB(uri string) error {
+
+	serverAPI := options.ServerAPI(options.ServerAPIVersion1)
+	opts := options.Client().ApplyURI(uri).SetServerAPIOptions(serverAPI)
+
+	localclient, err := mongo.Connect(context.Background(), opts)
 
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
+	client = localclient
+
+	Citizens = client.Database("small_data_store").Collection("citizens")
 
 	err = client.Ping(context.Background(), nil)
 
-	if err != nil {
-		fmt.Println(err)
-	}
-	fmt.Println("Connected to MongoDB!")
+	return err
+}
+
+func Close() error {
+	return client.Disconnect(context.Background())
 }
